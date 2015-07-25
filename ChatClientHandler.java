@@ -25,15 +25,20 @@ public class ChatClientHandler extends Thread {
 		String[] commands = message.split(" ");
 		/* helpコマンド使用 */
 		if(commands[0].equalsIgnoreCase("help")) {
-		    help(); 
-		    System.out.println("：help, name, whoami, users, bye, post, tell, reject"); /* サーバ画面に出力 */
+		    help();
 		}
 		/* nameコマンド使用 */
 		    else if(commands[0].equalsIgnoreCase("name")) {
 			name(commands[1]);
 		    }
 		}
-	    }
+        /* whoamiコマンド使用 */
+        else if(commands[0].equalsIgnoreCase("whoami")) {
+            whoami();
+            /* サーバ画面に現在のクライアント名を出力 */
+            System.out.println("：" + name);
+        }
+    }
 	catch(IOException e) {
 	    e.printStackTrace();
 	}
@@ -59,6 +64,12 @@ public class ChatClientHandler extends Thread {
 	}
 	this.name = user; /* 名前を変更 */
     }
+    /************************************************************************/
+    /* 現在設定されている名前を表示 */
+    public void whoami() throws IOException {
+        this.send(this.name);
+    }
+
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
     public void open() throws IOException {
