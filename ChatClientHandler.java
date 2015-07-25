@@ -28,8 +28,12 @@ public class ChatClientHandler extends Thread {
 		    help(); 
 		    System.out.println("：help, name, whoami, users, bye, post, tell, reject"); /* サーバ画面に出力 */
 		}
+		/* nameコマンド使用 */
+		    else if(commands[0].equalsIgnoreCase("name")) {
+			name(commands[1]);
+		    }
+		}
 	    }
-	}
 	catch(IOException e) {
 	    e.printStackTrace();
 	}
@@ -41,6 +45,19 @@ public class ChatClientHandler extends Thread {
     /* 処理可能な命令の一覧を表示させる */
     public void help() throws IOException {
 	this.send("help, name, whoami, users, bye, post, tell, reject");
+    }
+  /************************************************************************/
+    /* 名前の変更 */
+    public void name(String user) throws IOException { 
+	for(int i = 0; i < clients.size(); i++) {
+	    ChatClientHandler handler = (ChatClientHandler)clients.get(i);
+	    /* 変更したい名前が既に他のクライアントが使用していたら */
+	    if(user.equals(handler.name)) { 
+		this.send("既に使われている名前です。"); /* エラーメッセージ表示 */
+		return; /* 名前の変更は行われない */
+	    }
+	}
+	this.name = user; /* 名前を変更 */
     }
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
