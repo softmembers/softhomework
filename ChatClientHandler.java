@@ -31,20 +31,29 @@ public class ChatClientHandler extends Thread {
 		    else if(commands[0].equalsIgnoreCase("name")) {
 			name(commands[1]);
 		    }
-        /* whoamiコマンド使用 */
-        else if(commands[0].equalsIgnoreCase("whoami")) {
-            whoami();
-            /* サーバ画面に現在のクライアント名を出力 */
-            System.out.println("：" + name);
-        }
-    }
-    }
+		/* whoamiコマンド使用 */
+		    else if(commands[0].equalsIgnoreCase("whoami")) {
+			whoami();
+			/* サーバ画面に現在のクライアント名を出力 */
+			System.out.println("：" + name);
+		    }
+		/* usersコマンド使用 */
+		    else if(commands[0].equalsIgnoreCase("users")) {
+			users();
+			System.out.println(""); /* 改行 */
+		    }
+	    }
+	}
 	catch(IOException e) {
 	    e.printStackTrace();
 	}
 	finally {
 	    close();
 	}
+    }
+     /************************************************************************/
+    public String getClientName() {
+	return name;
     }
 /************************************************************************/
     /* 処理可能な命令の一覧を表示させる */
@@ -69,7 +78,23 @@ public class ChatClientHandler extends Thread {
     public void whoami() throws IOException {
         this.send(this.name);
     }
-
+ /************************************************************************/
+    /* 現在チャットに参加しているメンバの名前をクライアントに表示 */
+    public void users() throws IOException {
+	List names = new ArrayList(); /* 配列names作成 */
+	for(int i = 0; i < clients.size(); i++) { 
+	    /* ハンドラーにi番目に入ってるクライアント情報を代入 */
+	    ChatClientHandler handler = (ChatClientHandler)clients.get(i);
+	    names.add(handler.getClientName());	/* namesに情報を記入 */	
+	}
+	Collections.sort(names); /* 名簿順に並び替え */
+	/* メッセージを受け取ったクライアント名を表示 */
+	String returnUsers = "";
+	for(int i = 0; i < names.size(); i++) {
+	    returnUsers = returnUsers + names.get(i) + ",";
+	}
+	this.send(returnUsers);
+    }
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
     public void open() throws IOException {
