@@ -31,13 +31,13 @@ public class ChatClientHandler extends Thread {
 		    else if(commands[0].equalsIgnoreCase("name")) {
 			name(commands[1]);
 		    }
-		}
         /* whoamiコマンド使用 */
         else if(commands[0].equalsIgnoreCase("whoami")) {
             whoami();
             /* サーバ画面に現在のクライアント名を出力 */
             System.out.println("：" + name);
         }
+    }
     }
 	catch(IOException e) {
 	    e.printStackTrace();
