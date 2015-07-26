@@ -49,6 +49,11 @@ public class ChatClientHandler extends Thread {
                 System.out.println("：bye " + name);
                 break;
             }
+	/* postコマンド使用 */
+		else if(commands[0].equalsIgnoreCase("post")) {
+		    post(commands[1]);
+		    System.out.println(""); /* 改行 */
+		}
 	    }
 	}
 	catch(IOException e) {
@@ -106,6 +111,30 @@ public class ChatClientHandler extends Thread {
     /* チャットを終了する */
     public void bye() throws IOException {
         this.send("Bye " + this.name); /* 終了のメッセージ表示 */
+    }
+ /************************************************************************/
+    /* 接続しているクライアント全員にメッセージを送る */
+    public void post(String message) throws IOException {
+	List names = new ArrayList(); /* 配列names作成 */
+	for(int i = 0; i < clients.size(); i++) {
+	    /* ハンドラーにi番目に入ってるクライアント情報を代入 */
+	    ChatClientHandler handler = (ChatClientHandler)clients.get(i);
+		if(!name.equals(handler.name)){
+		    if(handler != this) { /* 自分以外のクライアントに */
+			names.add(handler.getClientName()); /* namesに情報を記入 */
+			/* メッセージを受け取ったクライアントに送ったクライアント名と */
+			/*メッセージを表示 */
+			handler.send("[" + this.getClientName() + "]" + message);
+		    }
+	    }
+	}
+	Collections.sort(names); /* 名簿順に並び替え */
+	/* メッセージを受け取ったクライアント名を表示 */
+	String returnMessage = "";
+	for(int i = 0; i < names.size(); i++) {
+	    returnMessage = returnMessage + names.get(i) + ",";
+	}
+	this.send(returnMessage);
     }
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
