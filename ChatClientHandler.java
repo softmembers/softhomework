@@ -42,6 +42,13 @@ public class ChatClientHandler extends Thread {
 			users();
 			System.out.println(""); /* 改行 */
 		    }
+            /* byeコマンド使用 */
+            else if(commands[0].equalsIgnoreCase("bye")) {
+                bye();
+                /* サーバ画面にチャット終了したクライアント名を出力 */
+                System.out.println("：bye " + name);
+                break;
+            }
 	    }
 	}
 	catch(IOException e) {
@@ -94,6 +101,11 @@ public class ChatClientHandler extends Thread {
 	    returnUsers = returnUsers + names.get(i) + ",";
 	}
 	this.send(returnUsers);
+    }
+    /************************************************************************/
+    /* チャットを終了する */
+    public void bye() throws IOException {
+        this.send("Bye " + this.name); /* 終了のメッセージ表示 */
     }
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
