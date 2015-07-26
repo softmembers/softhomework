@@ -54,6 +54,12 @@ public class ChatClientHandler extends Thread {
 		    post(commands[1]);
 		    System.out.println(""); /* 改行 */
 		}
+            /* tellコマンド使用 */
+        else if(commands[0].equalsIgnoreCase("tell")) {
+            tell(commands[1], commands[2]);
+            System.out.println(""); /* 改行 */
+        }
+
 	    }
 	}
 	catch(IOException e) {
@@ -136,6 +142,24 @@ public class ChatClientHandler extends Thread {
 	}
 	this.send(returnMessage);
     }
+    /************************************************************************/
+    /* 指定したクライアントだけにメッセージを送る */
+    public void tell(String user, String message) throws IOException {
+        List names = new ArrayList(); /* 配列names作成 */
+        for(int i = 0; i < clients.size(); i++) {
+            /* ハンドラーにi番目に入ってるクライアント情報を代入 */
+            ChatClientHandler handler = (ChatClientHandler)clients.get(i);
+            if(!name.equals(handler.name)){
+                /* userとhandler.name(クライアント名)が一緒だったら */
+                if(user.equals(handler.name)) {
+                    names.add(handler.getClientName()); /* namesに情報を記入 */
+                    handler.send("[" + this.getClientName() + " -> " + user + "]" + message); /* [送ったクライアント -> メッセージを受け取ったクライアント]とメッセージを表示 */
+                }
+            }
+        }
+        this.send(user + ","); /* メッセージを受け取ったクライアントを表示 */
+    }
+
     /************************************************************************/
     /* クライアントとのデータのやり取りを行うストリームを開く */
     public void open() throws IOException {
